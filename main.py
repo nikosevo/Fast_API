@@ -32,16 +32,11 @@ def get_posts():
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):
 
-    conn = connect.create_connection(r"newsreport.db")
-    cursor= conn.cursor()
+   
 
 
     today = date.today()
     str_date = today.strftime("%m/%d/%Y")
-    print(str_date)
-    print("-----------------------------------s")
-    sql = "hii"
-    print(sql)
     print(article.title)
     print(article.content)
     print(article.topic)
@@ -51,7 +46,6 @@ def add_article(article: ARTICLE):
     new_article = cursor.fetchone()
 
     conn.commit()
-    conn.close()
 
     return{'data': new_article}
 
