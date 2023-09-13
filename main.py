@@ -167,6 +167,17 @@ def modify_article(id: int , article: ARTICLE):
 
         return{'data': new_article}
 
+@app.get("/articles/search/{keyword}")
+def get_article(keyword: str):
+
+    cursor.execute("SELECT * FROM Articles WHERE title LIKE '%" + keyword + "%' OR content LIKE '%" + keyword + "%'")
+    
+    article = cursor.fetchone()
+
+    if not article:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"article with id {id} was not found")
+    return {"article ": article}
 
 @app.get("/articles/{id}")
 def get_article(id: int):
@@ -179,6 +190,7 @@ def get_article(id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"article with id {id} was not found")
     return {"article ": article}
+
 
 @app.delete("/articles/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_dvd(id: int):
