@@ -3,6 +3,9 @@ from fastapi import  FastAPI,Response, status, HTTPException
 import connect
 from datetime import date
 from bsmodel import *
+from comments import *
+
+import comments
 
 
 app = FastAPI()
@@ -163,3 +166,5 @@ def delete_dvd(id: int):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
+app.get("/comments")
+get_comments(cursor)
