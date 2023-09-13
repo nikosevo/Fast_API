@@ -1,9 +1,6 @@
 from fastapi import  FastAPI,Response, status, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import time
 from fastapi.middleware.cors import CORSMiddleware
 import connect
 
