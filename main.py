@@ -1,31 +1,14 @@
 from fastapi import  FastAPI,Response, status, HTTPException
-from pydantic import BaseModel
-from typing import Optional
-from fastapi.middleware.cors import CORSMiddleware
+
 import connect
+from datetime import date
+from bsmodel import *
 
 
 app = FastAPI()
 
 
-origins = ["*"]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-class ARTICLE(BaseModel):
-    title: str
-    topic: str
-    content: str
-
-class COMMENT(BaseModel):
-    username: Optional[str] = None
-    content:str
 
 
 conn = connect.create_connection(r"newsreport.db")
@@ -48,10 +31,27 @@ def get_posts():
 
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):
-    cursor.execute()
+
+    conn = connect.create_connection(r"newsreport.db")
+    cursor= conn.cursor()
+
+
+    today = date.today()
+    str_date = today.strftime("%m/%d/%Y")
+    print(str_date)
+    print("-----------------------------------s")
+    sql = "hii"
+    print(sql)
+    print(article.title)
+    print(article.content)
+    print(article.topic)
+    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{})".format(article.title,article.content,str_date,article.topic)
+    print(sql)
+    cursor.execute(sql)
     new_article = cursor.fetchone()
 
     conn.commit()
+    conn.close()
 
     return{'data': new_article}
 
