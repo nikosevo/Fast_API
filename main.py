@@ -41,7 +41,7 @@ def root():
 
 @app.get("/articles")
 def get_posts():
-    cursor.execute("""SELECT * FROM news """)
+    cursor.execute("""SELECT * FROM Articles """)
     allnews = cursor.fetchall()
     return{"data":allnews}
 
@@ -49,15 +49,15 @@ def get_posts():
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):
     cursor.execute()
-    new_articles = cursor.fetchone()
+    new_article = cursor.fetchone()
 
     conn.commit()
 
-    return{'data': new_articles}
+    return{'data': new_article}
 
 @app.get("/articles/{id}")
 def get_article(id: int):
-    cursor.execute("""SELECT * FROM articles WHERE id = %s """, (str(id),))
+    cursor.execute("""SELECT * FROM Articles WHERE id = %s """, (str(id),))
     
     article = cursor.fetchone()
 
