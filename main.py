@@ -38,14 +38,7 @@ def add_article(article: ARTICLE):
 
     today = date.today()
     str_date = today.strftime("%m/%d/%Y")
-    print(str_date)
-    print("-----------------------------------s")
-    sql = "hii"
-    print(sql)
-    print(article.title)
-    print(article.content)
-    print(article.topic)
-    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{})".format(article.title,article.content,str_date,article.topic)
+    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{}) RETURNING *".format(article.title,article.content,str_date,article.topic)
     print(sql)
     cursor.execute(sql)
     new_article = cursor.fetchone()
@@ -57,7 +50,8 @@ def add_article(article: ARTICLE):
 
 @app.get("/articles/{id}")
 def get_article(id: int):
-    cursor.execute("""SELECT * FROM Articles WHERE id = %s """, (str(id),))
+
+    cursor.execute("SELECT * FROM Articles WHERE article_id = \"{}\" ".format (str(id)))
     
     article = cursor.fetchone()
 
