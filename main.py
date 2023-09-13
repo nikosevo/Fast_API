@@ -111,6 +111,32 @@ def accept_article(id: int):
         conn.commit()
 
         return{'data': new_article}
+    
+
+@app.put('/articles/{id}/publish',status_code=status.HTTP_200_OK)
+def accept_article(id: int):
+
+    #if not publisehd
+    sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
+    print(sql)
+    cursor.execute(sql)
+    state = cursor.fetchone()
+
+    if not state:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"article with id {id} was not found")
+
+    
+    #then change those things: title , content, topics
+    if(state[0] == 2):
+        sql = "UPDATE Articles SET state = 3 WHERE article_id = \"{}\" RETURNING * ".format(id)
+        print(sql)
+        cursor.execute(sql)
+        new_article = cursor.fetchone()
+
+        conn.commit()
+
+        return{'data': new_article}
 
 @app.put('/articles/{id}',status_code=status.HTTP_200_OK)
 def modify_article(id: int , article: ARTICLE):
