@@ -5,6 +5,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from fastapi.middleware.cors import CORSMiddleware
+import connect
+
 
 app = FastAPI()
 
@@ -28,17 +30,9 @@ class COMMENT(BaseModel):
     username: Optional[str] = None
     content:str
 
-while True:
-    try:
-        
-        conn = psycopg2.connect(host='localhost',database='db',user='postgres' ,password ='postword1', cursor_factory=RealDictCursor)
-        cursor = conn.cursor()
-        print("Connected to database succesfully!")
-        break
-    except Exception as error:
-        print("Connecting to database failed!")
-        print("Error: ", error)
-        time.sleep(2)
+
+conn = connect.create_connection(r"newsreport.db")
+cursor= conn.cursor()
 
 
 

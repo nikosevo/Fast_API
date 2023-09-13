@@ -6,9 +6,10 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
+        print("Connected to database ")
         return conn
     except Error as e:
-        print(e)
+        print("Connecting to database failed!")
+        print("Error: ", e)
     
 
