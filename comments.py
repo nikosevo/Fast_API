@@ -4,8 +4,8 @@ from fastapi import  FastAPI,Response, status, HTTPException
 
 
 
-def get_comments(cursor,id):
-    cursor.execute("SELECT * FROM Comment WHERE comment_id = \"{}\" ORDER BY creation_date ASC".format(str(id)))
+def get_comments(cursor,article_id):
+    cursor.execute("SELECT * FROM Comment WHERE article_id = \"{}\" ORDER BY creation_date ASC".format(str(article_id)))
     allComments = cursor.fetchall()
     return{"data":allComments}
 
@@ -42,5 +42,23 @@ def accept_comment(cursor,conn,id:int):
         return{'data': co}
 
 
-def edit_comment(cursor,comment:COMMENT):
-    return 0
+def edit_comment(cursor,conn,comment_id,comment:COMMENT):
+    
+    #then change those things: content
+    sql = "UPDATE Comment SET content = \"{}\" WHERE topic_id = \"{}\" RETURNING * ".format(comment.content,comment_id)
+    print(sql)
+    cursor.execute(sql)
+    new_article = cursor.fetchone()
+
+    conn.commit()
+
+    return{'data': new_article}
+
+def reject_comment(cursor,conn,comment_id):
+    sql = "DELETE FROM Comment WHERE comment_id = \"{}\" RETURNING * ".format(str(comment_id))
+    cursor.execute(sql)
+    co = cursor.fetchone()
+
+    conn.commit()
+
+    return{'data': co}

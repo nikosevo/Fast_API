@@ -172,3 +172,13 @@ def search_article(cursor,keyword:str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"article with id {id} was not found")
     return {"article ": article}
+
+def get_article_topic(cursor,conn,topic_id:int):
+    cursor.execute("SELECT * FROM Articles WHERE topic_id = \"{}\"".format(str(topic_id)))
+    
+    article = cursor.fetchone()
+
+    if not article:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"article with id {id} was not found")
+    return {"article ": article}
