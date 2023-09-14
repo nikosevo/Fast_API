@@ -71,8 +71,8 @@ def get_article(topic_id: int):
 
 
 @app.post('/articles/{id}/comments',status_code=status.HTTP_201_CREATED)
-def add_comment(comment: COMMENT):
-    return com.add_comment(cursor,conn,comment,id)
+def add_comment(id:int,comment: COMMENT):
+    return com.add_comment(cursor,conn,id,comment)
 
 @app.get('/articles/{id}/comments',status_code=status.HTTP_200_OK)
 def get_comment():
@@ -87,8 +87,8 @@ def reject_comment(comment_id):
     return com.reject_comment(cursor,conn,comment_id)
 
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
-def edit_comment(comment: COMMENT):
-    return com.edit_comment(cursor,comment)
+def edit_comment(id:int, comment: COMMENT):
+    return com.edit_comment(cursor,conn,id,comment)
 
 
 #### TOPICS FUNCTION =================================
