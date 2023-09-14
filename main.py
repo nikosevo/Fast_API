@@ -70,8 +70,8 @@ def delete_article(id: int):
 def add_comment(comment: COMMENT):
     return com.add_comment(cursor,conn,comment)
 
-@app.put('/articles/{id}/comments/{comment_id}/submit',status_code=status.HTTP_200_OK)
-def submit_comment(comment: COMMENT):
+@app.put('/articles/{id}/comments/{comment_id}/accept',status_code=status.HTTP_200_OK)
+def accept_comment(comment: COMMENT):
     return 0
 
 @app.put('/articles/{id}/comments/{comment_id}/reject',status_code=status.HTTP_200_OK)
@@ -81,3 +81,30 @@ def reject_comment(comment: COMMENT):
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
 def edit_comment(comment: COMMENT):
     return com.edit_comment(cursor,comment)
+
+
+#### TOPICS FUNCTION =================================
+
+@app.get('/topics',status_code=status.HTTP_200_OK)
+def get_topics(role:str):
+    return 0
+
+@app.get('/topics/{topic_id}',status_code=status.HTTP_200_OK)
+def get_topic(topic_id):
+    return 0
+
+@app.post('/topics',status_code=status.HTTP_201_CREATED)
+def add_topic(topic: TOPIC):
+    return com.add_topic(cursor,conn,topic)
+
+@app.put('/topics/{topic_id}/accept',status_code=status.HTTP_200_OK)
+def edit_topic(topic: TOPIC):
+    return 0
+
+@app.put('/topics/{topic_id}/reject',status_code=status.HTTP_200_OK)
+def reject_topic(topic: TOPIC):
+    return 0
+
+@app.put('/topics/{topic_id}',status_code=status.HTTP_200_OK)
+def edit_topic(topic: TOPIC):
+    return 0
