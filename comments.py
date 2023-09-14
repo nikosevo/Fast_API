@@ -13,5 +13,5 @@ def get_comments(cursor):
     allComments = cursor.fetchall()
     return{"data":allComments}
 
-def edit_comments(cursor,comment:COMMENT):
+def edit_comment(cursor,comment:COMMENT):
     return 0
