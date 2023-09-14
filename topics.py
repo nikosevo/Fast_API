@@ -1,5 +1,7 @@
 from bsmodel import *
 from datetime import date
+from fastapi import  FastAPI,Response, status, HTTPException
+
 
 
 def get_topics(cursor,conn,role):
@@ -20,6 +22,15 @@ def get_topic(cursor,conn,topic_id):
     cursor.execute(sql)
     to = cursor.fetchone()
     return{"data":to}
+
+def edit_topic(cursor,conn,topic_id,topic:TOPIC):
+    sql = "UPDATE Topic SET name = \"{}\" WHERE topic_id = \"{}\" RETURNING * ".format(topic.topic_name , str(topic_id))
+    cursor.execute(sql)
+    topic = cursor.fetchone()
+    conn.commit()
+    return{'data': topic}
+
+
 
 def add_topic(cursor,conn,topic:TOPIC):
     today = date.today()
@@ -55,3 +66,13 @@ def reject_topic(cursor,conn,topic_id):
         conn.commit()
 
         return{'data': co}
+    
+def search_topic(cursor,keyword):
+    cursor.execute("SELECT * FROM Topic WHERE name LIKE '%" + keyword + "%'")
+    
+    article = cursor.fetchone()
+
+    if not article:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"article with id {id} was not found")
+    return {"article ": article}

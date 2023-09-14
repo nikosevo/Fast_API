@@ -115,8 +115,8 @@ def reject_topic(topic_id:int):
 
 
 @app.put('/topics/{topic_id}',status_code=status.HTTP_200_OK)
-def edit_topic(topic: TOPIC):
-    return 0
+def edit_topic(topic_id:int,topic: TOPIC):
+    return edit_topic(cursor,conn,topic_id,topic)
 
 @app.get("/topics/search/{keyword}")
 def search_topic(keyword: str):
