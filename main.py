@@ -26,7 +26,7 @@ def get_posts():
 
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):
-    return art.get_article(cursor,conn,article)
+    return art.add_article(cursor,conn,article)
 
 @app.put('/articles/{id}/submit',status_code=status.HTTP_200_OK)
 def submit_article(id: int):
