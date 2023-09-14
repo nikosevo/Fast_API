@@ -13,5 +13,5 @@ class COMMENT(BaseModel):
     content:str
 
 class TOPIC(BaseModel):
-    parentTopic: Optional[str] = None
+    parentTopic: Optional[int] = None
     topic_name: str

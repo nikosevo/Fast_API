@@ -43,7 +43,7 @@ def accept_article(id: int):
     
 @app.put('/articles/{id}/publish',status_code=status.HTTP_200_OK)
 def publish_article(id: int):
-    return art.accept_article(cursor,conn,id)
+    return art.publish_article(cursor,conn,id)
 
 @app.put('/articles/{id}',status_code=status.HTTP_200_OK)
 def modify_article(id: int , article: ARTICLE):
@@ -95,23 +95,24 @@ def edit_comment(id:int, comment: COMMENT):
 
 @app.get('/topics',status_code=status.HTTP_200_OK)
 def get_topics(role:str):
-    return 0
+    return top.get_topics(cursor,conn,role)
 
 @app.get('/topics/{topic_id}',status_code=status.HTTP_200_OK)
 def get_topic(topic_id):
-    return 0
+    return top.get_topic(cursor,conn,topic_id)
 
 @app.post('/topics',status_code=status.HTTP_201_CREATED)
 def add_topic(topic: TOPIC):
     return top.add_topic(cursor,conn,topic)
 
 @app.put('/topics/{topic_id}/accept',status_code=status.HTTP_200_OK)
-def edit_topic(topic: TOPIC):
-    return 0
+def edit_topic(topic_id:int):
+    return top.accept_topic(cursor,conn,topic_id)
 
 @app.put('/topics/{topic_id}/reject',status_code=status.HTTP_200_OK)
-def reject_topic(topic: TOPIC):
-    return 0
+def reject_topic(topic_id:int):
+    return top.reject_topic(cursor,conn,topic_id)
+
 
 @app.put('/topics/{topic_id}',status_code=status.HTTP_200_OK)
 def edit_topic(topic: TOPIC):

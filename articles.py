@@ -101,6 +101,9 @@ def publish_article(cursor,conn,id: int):
     cursor.execute(sql)
     state = cursor.fetchone()
 
+    today = date.today()
+    str_date = today.strftime("%m/%d/%Y")
+
     if not state:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"article with id {id} was not found")
@@ -108,7 +111,7 @@ def publish_article(cursor,conn,id: int):
     
     #then change those things: title , content, topics
     if(state[0] == 2):
-        sql = "UPDATE Articles SET state = 3 WHERE article_id = \"{}\" RETURNING * ".format(id)
+        sql = "UPDATE Articles SET state = 3, publishing_date = \"{}\" WHERE article_id = \"{}\" RETURNING * ".format(str_date,str(id))
         print(sql)
         cursor.execute(sql)
         new_article = cursor.fetchone()
