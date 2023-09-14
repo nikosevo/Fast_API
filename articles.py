@@ -165,7 +165,7 @@ def delete_article(cursor,conn,id: int):
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-def get_article(cursor,keyword:str):
+def search_article(cursor,keyword:str):
     cursor.execute("SELECT * FROM Articles WHERE title LIKE '%" + keyword + "%' OR content LIKE '%" + keyword + "%'")
     
     article = cursor.fetchone()

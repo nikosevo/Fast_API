@@ -18,6 +18,8 @@ def root():
     return {"message": "Go to /docs to see the API documentation"}
 
 
+#### ARTICLE FUCNTIONS ==================================
+
 @app.get("/articles")
 def get_posts():
     return art.get_posts(cursor)
@@ -34,12 +36,10 @@ def submit_article(id: int):
 def deny_article(id: int,reason:str):
     return art.deny_article(cursor,conn,id,reason)
 
-
 @app.put('/articles/{id}/accept',status_code=status.HTTP_200_OK)
 def accept_article(id: int):
     return art.accept_article(cursor,conn,id)
     
-
 @app.put('/articles/{id}/publish',status_code=status.HTTP_200_OK)
 def accept_article(id: int):
     return art.accept_article(cursor,conn,id)
@@ -49,27 +49,26 @@ def modify_article(id: int , article: ARTICLE):
     return art.modify_article(cursor,conn,id,article)
 
 @app.get("/articles/search/{keyword}")
-def get_article(keyword: str):
-    return art.get_article(cursor,keyword)
-
+def search_article(keyword: str):
+    return art.search_article(cursor,keyword)
 
 @app.get("/articles/{id}")
 def get_article(id: int):
     return art.get_article(cursor,conn,id)
-
 
 @app.delete("/articles/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_article(id: int):
     return art.delete_article(cursor,conn,id)
 
 
+
+#### COMMENT FUNCTION =================================
+
+
+
 @app.post('/articles/{id}/comments',status_code=status.HTTP_201_CREATED)
 def add_comment(comment: COMMENT):
-    sql = ""
-    cursor.execute(sql)
-    new_comment = cursor.fetchone()
-    conn.commit()
-    return{'data': new_comment}
+    return com.add_comment(cursor,conn,comment)
 
 @app.put('/articles/{id}/comments/{comment_id}/submit',status_code=status.HTTP_200_OK)
 def submit_comment(comment: COMMENT):
