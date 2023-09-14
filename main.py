@@ -79,16 +79,16 @@ def get_comment():
     return com.get_comment(cursor,conn,id)
 
 @app.put('/articles/{id}/comments/{comment_id}/accept',status_code=status.HTTP_200_OK)
-def accept_comment(comment_id):
+def accept_comment(comment_id:int):
     return com.accept_comment(cursor,conn,comment_id)
 
 @app.put('/articles/{id}/comments/{comment_id}/reject',status_code=status.HTTP_200_OK)
-def reject_comment(comment_id):
+def reject_comment(comment_id:int):
     return com.reject_comment(cursor,conn,comment_id)
 
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
-def edit_comment(comment: COMMENT):
-    return com.edit_comment(cursor,comment)
+def edit_comment(comment: COMMENT, comment_id:int):
+    return com.edit_comment(cursor,comment_id,comment)
 
 
 #### TOPICS FUNCTION =================================
