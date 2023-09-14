@@ -11,3 +11,7 @@ class ARTICLE(BaseModel):
 class COMMENT(BaseModel):
     username: Optional[str] = None
     content:str
+
+class TOPIC(BaseModel):
+    parentTopic: Optional[str] = None
+    topic_name: str
