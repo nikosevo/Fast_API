@@ -164,3 +164,13 @@ def delete_article(cursor,conn,id: int):
                             detail=f"article with id {id} does not exist")
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def get_article(cursor,keyword:str):
+    cursor.execute("SELECT * FROM Articles WHERE title LIKE '%" + keyword + "%' OR content LIKE '%" + keyword + "%'")
+    
+    article = cursor.fetchone()
+
+    if not article:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"article with id {id} was not found")
+    return {"article ": article}
