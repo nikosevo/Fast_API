@@ -63,9 +63,21 @@ def delete_article(id: int):
     return art.delete_article(cursor,conn,id)
 
 
-@app.get("/comments")
-def get_comments():
-    return com.get_comments(cursor)
+@app.post('/articles/{id}/comments',status_code=status.HTTP_201_CREATED)
+def add_comment(comment: COMMENT):
+    sql = ""
+    cursor.execute(sql)
+    new_comment = cursor.fetchone()
+    conn.commit()
+    return{'data': new_comment}
+
+@app.put('/articles/{id}/comments/{comment_id}/submit',status_code=status.HTTP_200_OK)
+def submit_comment(comment: COMMENT):
+    return 0
+
+@app.put('/articles/{id}/comments/{comment_id}/reject',status_code=status.HTTP_200_OK)
+def reject_comment(comment: COMMENT):
+    return 0
 
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
 def edit_comment(comment: COMMENT):
