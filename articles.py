@@ -68,7 +68,6 @@ def deny_article(cursor,conn,id: int,reason:str):
 
         return{'data': new_article}
 
-
 def accept_article(cursor,conn,id: int):
 
     #if not publisehd
@@ -92,9 +91,8 @@ def accept_article(cursor,conn,id: int):
         conn.commit()
 
         return{'data': new_article}
-    
 
-def accept_article(cursor,conn,id: int):
+def publish_article(cursor,conn,id: int):
 
     #if not publisehd
     sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
@@ -142,7 +140,6 @@ def modify_article(cursor,conn,id: int , article: ARTICLE):
         conn.commit()
 
         return{'data': new_article}
-
 
 def get_article(cursor,conn,id: int):
 
