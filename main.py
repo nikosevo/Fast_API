@@ -72,7 +72,8 @@ def delete_article(id: int):
 
 
 app.get("/comments")
-get_comments(cursor)
+def get_comments():
+    com.get_comments(cursor)
 
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
 def edit_comment(comment: COMMENT):
