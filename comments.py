@@ -29,7 +29,6 @@ def accept_comment(cursor,conn,id:int):
 
     return{'data': co}
 
-
 def edit_comment(cursor,conn,comment_id,comment:COMMENT):
     
     #then change those things: content
@@ -50,3 +49,4 @@ def reject_comment(cursor,conn,comment_id):
     conn.commit()
 
     return{'data': co}
+
