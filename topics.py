@@ -76,3 +76,13 @@ def search_topic(cursor,keyword):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"article with id {id} was not found")
     return {"article ": article}
+
+def view_articles_on_topic(cursor,conn,keyword):
+    print(keyword)
+    if(keyword.isdigit()):
+        sql = "SELECT content from Articles WHERE topic_id = {}".format(keyword)
+    else:
+        sql = "SELECT content from Articles INNER JOIN Topic ON Articles.topic_id = Topic.topic_id WHERE Topic.name = \"{}\"".format(keyword)
+    cursor.execute(sql)
+    allArt = cursor.fetchall()
+    return{"data":allArt}

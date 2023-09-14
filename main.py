@@ -113,12 +113,15 @@ def edit_topic(topic_id:int):
 def reject_topic(topic_id:int):
     return top.reject_topic(cursor,conn,topic_id)
 
-
 @app.put('/topics/{topic_id}',status_code=status.HTTP_200_OK)
 def edit_topic(topic_id:int,topic: TOPIC):
     return edit_topic(cursor,conn,topic_id,topic)
 
-@app.get("/topics/search/{keyword}")
+@app.get('/topics/search/{keyword}',status_code=status.HTTP_200_OK)
 def search_topic(keyword: str):
     return top.search_topic(cursor,keyword)
+
+@app.get('/topics/{keyword}/articles',status_code=status.HTTP_200_OK)
+def view_articles_on_topic(keyword:str):
+    return top.view_articles_on_topic(cursor,conn,keyword)
 
