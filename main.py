@@ -1,12 +1,10 @@
 from fastapi import  FastAPI,Response, status, HTTPException
 
 import connect
-from datetime import date
 from bsmodel import *
-from comments import *
 
-import comments
-
+import articles as art
+import comments as com
 
 app = FastAPI()
 
@@ -22,175 +20,44 @@ def root():
 
 @app.get("/articles")
 def get_posts():
-    cursor.execute("""SELECT * FROM Articles """)
-    allnews = cursor.fetchall()
-    return{"data":allnews}
+    return art.get_posts(cursor)
 
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):
-    today = date.today()
-    str_date = today.strftime("%m/%d/%Y")
-    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{})".format(article.title,article.content,str_date,article.topic)
-    print(sql)
-    cursor.execute(sql)
-    new_article = cursor.fetchone()
-
-    conn.commit()
-
-    return{'data': new_article}
+    return art.get_article(cursor,conn,article)
 
 @app.put('/articles/{id}/submit',status_code=status.HTTP_200_OK)
 def submit_article(id: int):
-
-    #if not publisehd
-    sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
-    print(sql)
-    cursor.execute(sql)
-    state = cursor.fetchone()
-
-    if not state:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} was not found")
-
-    
-    #then change those things: title , content, topics
-    if(state[0] == 0):
-        sql = "UPDATE Articles SET state = 1 WHERE article_id = \"{}\" RETURNING * ".format(id)
-        print(sql)
-        cursor.execute(sql)
-        new_article = cursor.fetchone()
-
-        conn.commit()
-
-        return{'data': new_article}
+    return art.submit_article(cursor,conn,id)
 
 @app.put('/articles/{id}/deny',status_code=status.HTTP_200_OK)
 def deny_article(id: int,reason:str):
-
-    #if not publisehd
-    sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
-    print(sql)
-    cursor.execute(sql)
-    state = cursor.fetchone()
-
-    if not state:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} was not found")
-
-    
-    #then change those things: title , content, topics
-    if(state[0] == 1):
-        sql = "UPDATE Articles SET state = 0 , rejected = \"{}\" WHERE article_id = \"{}\" RETURNING * ".format(reason,id)
-        print(sql)
-        cursor.execute(sql)
-        new_article = cursor.fetchone()
-
-        conn.commit()
-
-        return{'data': new_article}
+    return art.deny_article(cursor,conn,id,reason)
 
 
 @app.put('/articles/{id}/accept',status_code=status.HTTP_200_OK)
 def accept_article(id: int):
-
-    #if not publisehd
-    sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
-    print(sql)
-    cursor.execute(sql)
-    state = cursor.fetchone()
-
-    if not state:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} was not found")
-
-    
-    #then change those things: title , content, topics
-    if(state[0] == 1):
-        sql = "UPDATE Articles SET state = 2 WHERE article_id = \"{}\" RETURNING * ".format(id)
-        print(sql)
-        cursor.execute(sql)
-        new_article = cursor.fetchone()
-
-        conn.commit()
-
-        return{'data': new_article}
+    return art.accept_article(cursor,conn,id)
     
 
 @app.put('/articles/{id}/publish',status_code=status.HTTP_200_OK)
 def accept_article(id: int):
-
-    #if not publisehd
-    sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
-    print(sql)
-    cursor.execute(sql)
-    state = cursor.fetchone()
-
-    if not state:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} was not found")
-
-    
-    #then change those things: title , content, topics
-    if(state[0] == 2):
-        sql = "UPDATE Articles SET state = 3 WHERE article_id = \"{}\" RETURNING * ".format(id)
-        print(sql)
-        cursor.execute(sql)
-        new_article = cursor.fetchone()
-
-        conn.commit()
-
-        return{'data': new_article}
+    return art.accept_article(cursor,conn,id)
 
 @app.put('/articles/{id}',status_code=status.HTTP_200_OK)
 def modify_article(id: int , article: ARTICLE):
-
-    #if not publisehd
-    sql = "SELECT state FROM Articles WHERE article_id = \"{}\" ".format (str(id))
-    print(sql)
-    cursor.execute(sql)
-    state = cursor.fetchone()
-
-    if not article:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} was not found")
-
-    
-    #then change those things: title , content, topics
-    print(state[0])
-    if(state[0] != 3):
-        sql = "UPDATE Articles SET title = \"{}\", content = \"{}\",topic_id = {} WHERE article_id = \"{}\" RETURNING * ".format(article.title,article.content,article.topic,id)
-        print(sql)
-        cursor.execute(sql)
-        new_article = cursor.fetchone()
-
-        conn.commit()
-
-        return{'data': new_article}
+    return art.modify_article(cursor,conn,id,article)
 
 
 @app.get("/articles/{id}")
 def get_article(id: int):
-
-    cursor.execute("SELECT * FROM Articles WHERE article_id = \"{}\" ".format (str(id)))
-    
-    article = cursor.fetchone()
-
-    if not article:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} was not found")
-    return {"article ": article}
+    return art.get_article(cursor,conn,id)
 
 @app.delete("/articles/{id}",status_code=status.HTTP_204_NO_CONTENT)
-def delete_dvd(id: int):
-    cursor.execute()
-    deleted_article = cursor.fetchone()
-    conn.commit()
-    if deleted_article == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"article with id {id} does not exist")
-    
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+def delete_article(id: int):
+    return art.delete_article(cursor,conn,id)
 
 
-app.get("/comments")
-get_comments(cursor)
+@app.get("/comments")
+def get_comments():
+    return com.get_comments(cursor)
