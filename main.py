@@ -48,16 +48,32 @@ def accept_article(id: int):
 def modify_article(id: int , article: ARTICLE):
     return art.modify_article(cursor,conn,id,article)
 
+@app.get("/articles/search/{keyword}")
+def get_article(keyword: str):
+
+    cursor.execute("SELECT * FROM Articles WHERE title LIKE '%" + keyword + "%' OR content LIKE '%" + keyword + "%'")
+    
+    article = cursor.fetchone()
+
+    if not article:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"article with id {id} was not found")
+    return {"article ": article}
 
 @app.get("/articles/{id}")
 def get_article(id: int):
     return art.get_article(cursor,conn,id)
+
 
 @app.delete("/articles/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_article(id: int):
     return art.delete_article(cursor,conn,id)
 
 
-@app.get("/comments")
-def get_comments():
-    return com.get_comments(cursor)
+
+app.get("/comments")
+get_comments(cursor)
+
+@app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
+def edit_comment(comment: COMMENT):
+    return 0
