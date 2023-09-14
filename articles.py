@@ -11,6 +11,7 @@ def get_posts(cursor):
 def add_article(cursor,conn,article: ARTICLE):
     today = date.today()
     str_date = today.strftime("%m/%d/%Y")
+    print(str_date)
     sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{})".format(article.title,article.content,str_date,article.topic)
     print(sql)
     cursor.execute(sql)
