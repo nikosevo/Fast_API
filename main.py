@@ -72,15 +72,19 @@ def get_article(topic_id: int):
 
 @app.post('/articles/{id}/comments',status_code=status.HTTP_201_CREATED)
 def add_comment(comment: COMMENT):
-    return com.add_comment(cursor,conn,comment)
+    return com.add_comment(cursor,conn,comment,id)
+
+@app.get('/articles/{id}/comments',status_code=status.HTTP_200_OK)
+def get_comment():
+    return com.get_comment(cursor,conn,id)
 
 @app.put('/articles/{id}/comments/{comment_id}/accept',status_code=status.HTTP_200_OK)
-def accept_comment(comment: COMMENT):
-    return 0
+def accept_comment(comment_id):
+    return com.accept_comment(cursor,conn,comment_id)
 
 @app.put('/articles/{id}/comments/{comment_id}/reject',status_code=status.HTTP_200_OK)
-def reject_comment(comment: COMMENT):
-    return 0
+def reject_comment(comment_id):
+    return com.reject_comment(cursor,conn,comment_id)
 
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
 def edit_comment(comment: COMMENT):
