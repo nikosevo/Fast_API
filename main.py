@@ -41,7 +41,7 @@ def accept_article(id: int):
     return art.accept_article(cursor,conn,id)
     
 @app.put('/articles/{id}/publish',status_code=status.HTTP_200_OK)
-def publish_article(id: int):
+def accept_article(id: int):
     return art.accept_article(cursor,conn,id)
 
 @app.put('/articles/{id}',status_code=status.HTTP_200_OK)
