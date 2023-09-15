@@ -8,7 +8,7 @@ def get_posts(cursor,role):
     if(role == 0):
         cursor.execute("""SELECT * FROM Articles WHERE  state = 3""")
     else:
-        cursor.execute("""SELECT * FROM Articles WHERE  state = 3""")
+        cursor.execute("""SELECT * FROM Articles """)
 
     allnews = cursor.fetchall()
     return{"data":allnews}
@@ -17,7 +17,7 @@ def add_article(cursor,conn,article: ARTICLE):
     today = date.today()
     str_date = today.strftime("%m/%d/%Y")
     print(str_date)
-    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{})".format(article.title,article.content,str_date,article.topic)
+    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"{}\",\"{}\",\"{}\",{}) RETURNING *".format(article.title,article.content,str_date,article.topic)
     print(sql)
     cursor.execute(sql)
     new_article = cursor.fetchone()
