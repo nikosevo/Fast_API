@@ -17,6 +17,10 @@ cursor= conn.cursor()
 
 app.logged_role = 0
 
+## role = 0 : guess
+## role = 1 : writter 
+## role = 2 : admin 
+
 @app.get("/")
 def root():
 
@@ -47,36 +51,49 @@ def logout():
 
 @app.get("/articles")
 def get_posts():
-    print(app.logged_role)
-    if(app.logged_role == 2 ):
-        print(app.logged_role)
-        return art.get_posts(cursor)
-    else:
-        return {"access Denied"}
+    return art.get_posts(cursor,app.logged_role)
 
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):
-    return art.add_article(cursor,conn,article)
+    if(app.logged_role > 0 ):
+        return art.add_article(cursor,conn,article)
+    else:
+        return {"Access Denied"}
 
 @app.put('/articles/{id}/submit',status_code=status.HTTP_200_OK)
 def submit_article(id: int):
-    return art.submit_article(cursor,conn,id)
+    if(app.logged_role > 0 ):
+        return art.submit_article(cursor,conn,id)
+    else:
+        return {"Access Denied"}
 
 @app.put('/articles/{id}/deny',status_code=status.HTTP_200_OK)
 def deny_article(id: int,reason:str):
-    return art.deny_article(cursor,conn,id,reason)
+    if(app.logged_role == 2 ):
+        return art.deny_article(cursor,conn,id,reason)
+    else:
+        return{"Access Denied"}
 
 @app.put('/articles/{id}/accept',status_code=status.HTTP_200_OK)
 def accept_article(id: int):
-    return art.accept_article(cursor,conn,id)
+    if(app.logged_role == 2 ):
+        return art.accept_article(cursor,conn,id)
+    else:
+        return{"Access Denied"}
     
 @app.put('/articles/{id}/publish',status_code=status.HTTP_200_OK)
 def publish_article(id: int):
-    return art.publish_article(cursor,conn,id)
+    if(app.logged_role == 2 ):
+        return art.publish_article(cursor,conn,id)
+    else:
+        return{"Access Denied"}
 
 @app.put('/articles/{id}',status_code=status.HTTP_200_OK)
 def modify_article(id: int , article: ARTICLE):
-    return art.modify_article(cursor,conn,id,article)
+    if(app.logged_role > 0 ):
+        return art.modify_article(cursor,conn,id,article)
+    else:
+        return{"Access Denied"}
 
 @app.get("/articles/search/{keyword}")
 def search_article(keyword: str):
@@ -88,8 +105,10 @@ def get_article(id: int):
 
 @app.delete("/articles/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_article(id: int):
-    return art.delete_article(cursor,conn,id)
-
+    if(app.logged_role == 2 ):
+        return art.delete_article(cursor,conn,id)
+    else:
+        return{"Access Denied"}
 
 @app.get("/articles/{topic_id}")
 def get_article(topic_id: int):
@@ -109,22 +128,32 @@ def get_comment():
 
 @app.put('/articles/{id}/comments/{comment_id}/accept',status_code=status.HTTP_200_OK)
 def accept_comment(comment_id:int):
-    return com.accept_comment(cursor,conn,comment_id)
+    if(app.logged_role == 2 ):
+        return com.accept_comment(cursor,conn,comment_id)
+    else:
+        return{"Access Denied"}
 
 @app.put('/articles/{id}/comments/{comment_id}/reject',status_code=status.HTTP_200_OK)
 def reject_comment(comment_id:int):
-    return com.reject_comment(cursor,conn,comment_id)
+    if(app.logged_role == 2 ):
+        return com.reject_comment(cursor,conn,comment_id)
+    else:
+        return{"Access Denied"}
 
 @app.put('/articles/{id}/comments/{comment_id}',status_code=status.HTTP_200_OK)
 def edit_comment(id:int, comment: COMMENT):
-    return com.edit_comment(cursor,conn,id,comment)
+    if(app.logged_role == 2 ):
+        return com.edit_comment(cursor,conn,id,comment)
+    else:
+        return{"Access Denied"}
 
 
 #### TOPICS FUNCTION =================================
 
+###### fix that !!!!!!
 @app.get('/topics',status_code=status.HTTP_200_OK)
-def get_topics(role:str):
-    return top.get_topics(cursor,conn,role)
+def get_topics():
+    return top.get_topics(cursor,conn,app.logged_role)
 
 @app.get('/topics/{topic_id}',status_code=status.HTTP_200_OK)
 def get_topic(topic_id):
@@ -132,19 +161,31 @@ def get_topic(topic_id):
 
 @app.post('/topics',status_code=status.HTTP_201_CREATED)
 def add_topic(topic: TOPIC):
-    return top.add_topic(cursor,conn,topic)
+    if(app.logged_role > 0 ):
+        return top.add_topic(cursor,conn,topic)
+    else:
+        return{"Access Denied"}
 
 @app.put('/topics/{topic_id}/accept',status_code=status.HTTP_200_OK)
 def edit_topic(topic_id:int):
-    return top.accept_topic(cursor,conn,topic_id)
+    if(app.logged_role > 0 ):
+        return top.accept_topic(cursor,conn,topic_id)
+    else:
+        return{"Access Denied"}
 
 @app.put('/topics/{topic_id}/reject',status_code=status.HTTP_200_OK)
 def reject_topic(topic_id:int):
-    return top.reject_topic(cursor,conn,topic_id)
+    if(app.logged_role == 2 ):
+        return top.reject_topic(cursor,conn,topic_id)
+    else:
+        return{"Access Denied"}
 
 @app.put('/topics/{topic_id}',status_code=status.HTTP_200_OK)
 def edit_topic(topic_id:int,topic: TOPIC):
-    return edit_topic(cursor,conn,topic_id,topic)
+    if(app.logged_role > 0 ):
+        return edit_topic(cursor,conn,topic_id,topic)
+    else:
+        return{"Access Denied"}
 
 @app.get('/topics/search/{keyword}',status_code=status.HTTP_200_OK)
 def search_topic(keyword: str):

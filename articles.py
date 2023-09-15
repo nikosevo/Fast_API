@@ -3,8 +3,13 @@ from datetime import date
 from fastapi import  FastAPI,Response, status, HTTPException
 
 
-def get_posts(cursor):
-    cursor.execute("""SELECT * FROM Articles """)
+def get_posts(cursor,role):
+    #return only published articles
+    if(role == 0):
+        cursor.execute("""SELECT * FROM Articles WHERE  state = 3""")
+    else:
+        cursor.execute("""SELECT * FROM Articles WHERE  state = 3""")
+
     allnews = cursor.fetchall()
     return{"data":allnews}
 
