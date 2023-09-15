@@ -57,7 +57,9 @@ def reject_topic(cursor,conn,topic_id):
     cursor.execute(sql)
     state = cursor.fetchone()
     
-
+    if not state:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"topic with id {id} was not found")
     if(state[0] != 1):
         sql = "DELETE FROM Topic WHERE topic_id = \"{}\" RETURNING * ".format(str(topic_id))
         cursor.execute(sql)

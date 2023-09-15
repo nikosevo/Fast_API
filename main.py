@@ -45,7 +45,7 @@ async def login(user:USER):
 @app.post("/loggout")
 def logout():
     app.logged_role = 0
-    return{"Successfully logged out"}
+    return{'detail':"Successfully logged out"}
 
 #### ARTICLE FUCNTIONS ==================================
 
@@ -70,9 +70,9 @@ def submit_article(id: int):
         
 
 @app.put('/articles/{id}/deny',status_code=status.HTTP_200_OK)
-def deny_article(id: int,reason:str):
+def deny_article(id: int,denied:DENIED):
     if(app.logged_role == 2 ):
-        return art.deny_article(cursor,conn,id,reason)
+        return art.deny_article(cursor,conn,id,denied)
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f"Access Denied")
@@ -125,8 +125,8 @@ def add_comment(id:int,comment: COMMENT):
     return com.add_comment(cursor,conn,id,comment)
 
 @app.get('/articles/{id}/comments',status_code=status.HTTP_200_OK)
-def get_comment():
-    return com.get_comment(cursor,conn,id)
+def get_comment(id:int):
+    return com.get_comments(cursor,conn,id)
 
 @app.put('/articles/{id}/comments/{comment_id}/accept',status_code=status.HTTP_200_OK)
 def accept_comment(comment_id:int):
@@ -185,7 +185,7 @@ def reject_topic(topic_id:int):
 @app.put('/topics/{topic_id}',status_code=status.HTTP_200_OK)
 def edit_topic(topic_id:int,topic: TOPIC):
     if(app.logged_role > 0 ):
-        return edit_topic(cursor,conn,topic_id,topic)
+        return top.edit_topic(cursor,conn,topic_id,topic)
     else:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=f"Access Denied")

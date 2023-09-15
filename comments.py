@@ -4,7 +4,7 @@ from fastapi import  FastAPI,Response, status, HTTPException
 
 
 
-def get_comments(cursor,article_id):
+def get_comments(cursor,conn,article_id):
     cursor.execute("SELECT * FROM Comment WHERE article_id = \"{}\" ORDER BY creation_date ASC".format(str(article_id)))
     allComments = cursor.fetchall()
     return{"data":allComments}

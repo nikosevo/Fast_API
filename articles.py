@@ -162,7 +162,9 @@ def get_article(cursor,conn,id: int):
     return {"article ": article}
 
 def delete_article(cursor,conn,id: int):
-    cursor.execute()
+    
+    sql = "DELETE FROM Articles WHERE article_id = \"{}\" RETURNING * ".format(str(id))
+    cursor.execute(sql)
     deleted_article = cursor.fetchone()
     conn.commit()
     if deleted_article == None:

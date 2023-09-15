@@ -19,3 +19,7 @@ class TOPIC(BaseModel):
 class USER(BaseModel):
     username: str
     password: str
+
+
+class DENIED(BaseModel):
+    reason: str

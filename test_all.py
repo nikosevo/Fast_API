@@ -3,6 +3,8 @@ from main import app
 import pytest
 client = TestClient(app)
 
+#UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Comment';
+
 
 def test_login_user():
     res = client.post("/login", json={"username": "nikosevo", "password": "123"})
@@ -17,11 +19,11 @@ def test_login_user():
     "Science",
     "Sports",
 ])
-
 def test_add_topic(topic_name):
     res = client.post(
-        "/topics", json={"name": topic_name})
+        "/topics", json={"topic_name": topic_name})
     assert res.status_code == 201
+
 def test_get_topics():
     res = client.get("/topics")
     assert res.status_code == 200
@@ -33,7 +35,7 @@ def test_get_topic():
 
 
 def test_edit_topic():
-    res = client.put("/topics/1", json={"name": "Edited Topic Name"})
+    res = client.put("/topics/1", json={"topic_name": "Edited Topic Name"})
     assert res.status_code == 200
 
 def test_accept_topic():
@@ -104,18 +106,18 @@ def test_get_article_topic():
 
 #-------------------COMMENT TESTING------------
 
-@pytest.mark.parametrize("comment_text", [
+@pytest.mark.parametrize("content", [
     "This is a great article!",
     "I disagree with some points.",
     "Nice job on this one!",
 ])
-def test_add_comment(comment_text):
+def test_add_comment(content):
     res = client.post(
-        "/articles/1/comments", json={"comment": comment_text})
+        "/articles/1/comments", json={"content": content})
     assert res.status_code == 201
 
 def test_edit_comment():
-    comment_data = {"comment": "Edited Comment Text"}
+    comment_data = {"content": "Edited Comment Text"}
     res = client.put("/articles/1/comments/1", json=comment_data)
     assert res.status_code == 200
 
@@ -136,7 +138,7 @@ def test_reject_comment():
 
 def test_logout_user():
     res = client.post("/logout")
-    
+    print(res.json().get('detail'))
     assert res.json().get('detail') == "Successfully logged out"
     assert res.status_code == 200
 
