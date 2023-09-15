@@ -1,6 +1,7 @@
 from fastapi import  FastAPI,Response, status, HTTPException,Depends
 from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
 from typing import Annotated
+from datetime import date
 
 import connect
 from bsmodel import *
@@ -24,6 +25,15 @@ def initialize_db_for_testing():
     sql = "UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME=\"Articles\""
     cursor.execute(sql)
     sql = "UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME=\"Comment\""
+    cursor.execute(sql)
+    
+    sql = "INSERT INTO Topic(name,creation_date)VALUES (\"Technology\",\"{}\")".format(date.today().strftime("%m/%d/%Y"))
+    cursor.execute(sql)
+    sql = "INSERT INTO Topic(name,creation_date,parent_topic_id)VALUES (\"Science\",\"{}\",1)".format(date.today().strftime("%m/%d/%Y"))
+    cursor.execute(sql)
+    sql = "INSERT INTO Articles(title,content,creation_date,topic_id) VALUES (\"Testing Title\",\"Testing content\",\"{}\",1) RETURNING *".format(date.today().strftime("%m/%d/%Y"))
+    cursor.execute(sql)
+    sql = "INSERT INTO Comment(content,creation_date,username,article_id)VALUES (\"very nice article\",\"{}\",\"fotis\",1)".format(date.today().strftime("%m/%d/%Y"))
     cursor.execute(sql)
 
 

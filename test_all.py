@@ -6,7 +6,7 @@ client = TestClient(app)
 
 initialize_db_for_testing()
 
-
+#--------------------------AUTHORIZED_TESTING----------------------------------
 
 def test_login_user():
     res = client.post("/login", json={"username": "nikosevo", "password": "123"})
@@ -17,8 +17,8 @@ def test_login_user():
 #-----------------TOPICS-------------------------------------------------------
 
 @pytest.mark.parametrize("topic_name", [
-    "Technology",
-    "Science",
+    "Movies",
+    "Politics",
     "Sports",
 ])
 def test_add_topic(topic_name):
