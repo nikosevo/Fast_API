@@ -9,7 +9,7 @@ import articles as art
 import comments as com
 import topics as top
 
-def refresh_db():
+def initialize_db_for_testing():
     #UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Comment';
     sql = "DELETE FROM \"Topic\""
     cursor.execute(sql)

@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
-from main import app,refresh_db
+from main import app,initialize_db_for_testing
 import pytest
 client = TestClient(app)
 
 
-refresh_db()
+initialize_db_for_testing()
 
 
 
