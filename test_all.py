@@ -14,6 +14,12 @@ def test_login_user():
     assert res.json().get('detail') == "logged in as nikosevo"
     assert res.status_code == 202
 
+def test_incorrect_login_user():
+    res = client.post("/login", json={"username": "nikosevo", "password": "1357"})
+    print(res.json().get('detail'))
+    assert res.json().get('detail') == "wrong credentials"
+    assert res.status_code == 403
+
 #-----------------TOPICS-------------------------------------------------------
 
 @pytest.mark.parametrize("topic_name", [
