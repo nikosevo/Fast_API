@@ -1,4 +1,6 @@
-from fastapi import  FastAPI,Response, status, HTTPException
+from fastapi import  FastAPI,Response, status, HTTPException,Depends
+from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
+from typing import Annotated
 
 import connect
 from bsmodel import *
@@ -7,23 +9,50 @@ import articles as art
 import comments as com
 import topics as top
 
+
 app = FastAPI()
 
 conn = connect.create_connection(r"newsreport.db")
 cursor= conn.cursor()
 
+app.logged_role = 0
 
 @app.get("/")
 def root():
 
     return {"message": "Go to /docs to see the API documentation"}
 
+#### AUTHENTICATION =====================================
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@app.post("/login{username}/{password}")
+async def login(username:str,password:str):
+    sql = "SELECT username,password,role FROM User WHERE username = \"{}\"".format(username,password)
+    cursor.execute(sql)
+    user_data = cursor.fetchone()
+
+    if(user_data[1] == password and user_data[0] == username):
+        app.logged_role = int(user_data[2])
+        return {"logged in as {}".format(username)}
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"wrong credentials")
+@app.post("loggout")
+def logout():
+    app.logged_role = 0
+    return{"Successfully logged out"}
 
 #### ARTICLE FUCNTIONS ==================================
 
 @app.get("/articles")
 def get_posts():
-    return art.get_posts(cursor)
+    print(app.logged_role)
+    if(app.logged_role == 2 ):
+        print(app.logged_role)
+        return art.get_posts(cursor)
+    else:
+        return {"access Denied"}
 
 @app.post('/articles',status_code=status.HTTP_201_CREATED)
 def add_article(article: ARTICLE):

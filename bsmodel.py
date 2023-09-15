@@ -15,3 +15,7 @@ class COMMENT(BaseModel):
 class TOPIC(BaseModel):
     parentTopic: Optional[int] = None
     topic_name: str
+
+class USER(BaseModel):
+    username: str
+    password: str
