@@ -1,9 +1,11 @@
 from fastapi.testclient import TestClient
-from main import app
+from main import app,refresh_db
 import pytest
 client = TestClient(app)
 
-#UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Comment';
+
+refresh_db()
+
 
 
 def test_login_user():
@@ -47,7 +49,7 @@ def test_reject_topic():
     assert res.status_code == 200
 
 def test_search_topic():
-    res = client.get("/topics/search/Technology")
+    res = client.get("/topics/search/Science")
     assert res.status_code == 200
 
 def test_view_articles_on_topic():
@@ -137,7 +139,7 @@ def test_reject_comment():
 #--------------UNAUTHORIZED----------------------------------
 
 def test_logout_user():
-    res = client.post("/logout")
+    res = client.post("/loggout")
     print(res.json().get('detail'))
     assert res.json().get('detail') == "Successfully logged out"
     assert res.status_code == 200
@@ -173,3 +175,5 @@ def test_unauth_user_publish_article():
 def test_unauth_user_delete_article():
     res = client.delete("/articles/1")
     assert res.status_code == 401
+
+

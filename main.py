@@ -9,6 +9,23 @@ import articles as art
 import comments as com
 import topics as top
 
+def refresh_db():
+    #UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Comment';
+    sql = "DELETE FROM \"Topic\""
+    cursor.execute(sql)
+    sql = "DELETE FROM \"Articles\""
+    cursor.execute(sql)
+    sql = "DELETE FROM \"Comment\""
+    cursor.execute(sql)
+
+
+    sql = "UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME=\"Topic\""
+    cursor.execute(sql)
+    sql = "UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME=\"Articles\""
+    cursor.execute(sql)
+    sql = "UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME=\"Comment\""
+    cursor.execute(sql)
+
 
 app = FastAPI()
 
